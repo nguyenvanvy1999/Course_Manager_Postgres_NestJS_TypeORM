@@ -35,7 +35,7 @@ function initMiddleware(app: INestApplication) {
 }
 
 function initSwagger(app: INestApplication) {
-  if (process.env.SWAGGER_ENABLE === 'true') {
+  if (configService.swagger) {
     const config = new DocumentBuilder()
       .addBearerAuth()
       .setTitle('Mesthing API')
@@ -60,15 +60,17 @@ function initGlobal(app: INestApplication) {
 }
 
 function log() {
-  const { port, host, nodeEnv } = configService;
+  const { port, host, nodeEnv, swagger } = configService;
   console.log('');
   console.log('');
-  console.log(``);
+  console.log('');
   console.log(`-------------------------------------------------------`);
-  console.log(`Server        : ${host}:${port}`);
+  console.log(`Server        : http://${host}:${port}`);
   console.log(`Environment   : ${nodeEnv}`);
-  console.log(`Swagger       : ${host}:${port}/apis`);
+  swagger
+    ? console.log(`Swagger       : http://${host}:${port}/apis`)
+    : console.log('Swagger       : Disable');
   console.log(`-------------------------------------------------------`);
-  console.log(``);
+  console.log('');
 }
 bootstrap();

@@ -40,6 +40,7 @@
     "rxjs": "^6.6.6",
     "serve-favicon": "^2.5.0",
     "socketio": "^1.0.0",
+    "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.34",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5"

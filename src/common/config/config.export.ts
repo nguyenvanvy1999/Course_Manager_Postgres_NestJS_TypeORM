@@ -42,6 +42,10 @@ class ConfigService {
     return this.getValue('MODE') || 'DEV';
   }
 
+  get swagger(): boolean {
+    return this.getValue('SWAGGER_ENABLE') === 'true';
+  }
+
   public isDevelopment() {
     return this.getValue('MODE', false) === 'DEV';
   }
