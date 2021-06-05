@@ -46,7 +46,6 @@ function initSwagger(app: INestApplication) {
       )
       .setDescription('Resort Management API')
       .setVersion('1.0')
-      .addTag('user')
       .setLicense('MIT', 'https://opensource.org/licenses/MIT')
       .build();
     const document = SwaggerModule.createDocument(app, config);
