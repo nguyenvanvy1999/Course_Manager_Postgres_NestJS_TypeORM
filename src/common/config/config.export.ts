@@ -30,8 +30,16 @@ class ConfigService {
     return this;
   }
 
-  public getPort() {
-    return this.getValue('PORT', true);
+  get host(): string {
+    return this.getValue('HOST') || 'localhost';
+  }
+
+  get port(): number {
+    return parseInt(this.getValue('PORT')) || 3000;
+  }
+
+  get nodeEnv(): string {
+    return this.getValue('MODE') || 'DEV';
   }
 
   public isDevelopment() {
