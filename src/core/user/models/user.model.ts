@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Account } from 'src/core/account/models';
 import { Base } from 'src/core/base/models';
-import { Role } from 'src/core/ROLE/models';
+import { Role } from 'src/core/role/models';
 import { CheckString } from 'src/decorators';
 import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from 'typeorm';
 import { IAdmin, IMod, ISupporter, IUser } from '../interfaces';
