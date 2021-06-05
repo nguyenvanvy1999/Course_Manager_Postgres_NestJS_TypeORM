@@ -4,7 +4,7 @@ import { ApiInit, ControllerInit } from 'src/decorators';
 import { CourseCreateDTO, CourseDTO, CourseUpdateDTO } from '../dtos';
 import { CourseService } from '../services';
 
-@ControllerInit('courses')
+@ControllerInit('course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
