@@ -47,7 +47,7 @@ export class AccountController {
   @ApiInit('Delete account', Boolean)
   public async delete(@Param('id') id: string): Promise<boolean> {
     try {
-      return await this.accountService.remove(id);
+      return await this.accountService.delete(id);
     } catch (error) {
       throw error;
     }

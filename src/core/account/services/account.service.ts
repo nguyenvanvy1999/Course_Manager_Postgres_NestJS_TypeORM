@@ -1,4 +1,5 @@
 import {
+  Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { AccountDTO, AccountUpdateDTO } from '../dtos';
 import { Account } from '../models';
 import { mapAccountToAccountDTO } from '../tools';
 
+@Injectable()
 export class AccountService {
   constructor(
     @InjectRepository(Account)
@@ -54,7 +56,7 @@ export class AccountService {
     }
   }
 
-  public async remove(id: string): Promise<boolean> {
+  public async delete(id: string): Promise<boolean> {
     try {
       const result = await this.accountRepository.delete({ id });
       return result.affected !== null;
