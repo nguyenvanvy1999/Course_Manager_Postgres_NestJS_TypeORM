@@ -21,7 +21,7 @@ export class CourseService {
 
   public async findById(id: string): Promise<CourseDTO> {
     try {
-      return await this.courseRepository.findOne(id);
+      return await this.courseRepository.findOne({ id });
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

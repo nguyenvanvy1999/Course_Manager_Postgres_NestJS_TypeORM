@@ -14,15 +14,20 @@ export const winstonTransport = [
         format: combine(timestamp(), ms(), simple(), json()),
       }),
   new winstonDaily({
-    filename: 'logs/application-%DATE%.log',
+    filename: `${logDir}/app/app-%DATE%.log`,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     handleExceptions: true,
     maxSize: '20m',
     maxFiles: 30,
   }),
-  new transports.File({
-    filename: 'logs/error.log',
+  new winstonDaily({
+    filename: `${logDir}/error/error-%DATE%.log`,
     level: 'error',
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: true,
+    handleExceptions: true,
+    maxSize: '20m',
+    maxFiles: 30,
   }),
 ];
