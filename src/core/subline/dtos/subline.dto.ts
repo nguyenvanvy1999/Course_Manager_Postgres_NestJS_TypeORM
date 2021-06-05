@@ -1,21 +1,21 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Subtitle } from 'src/core/subtitle/models';
+import { IsDate, IsUUID } from 'class-validator';
 import { CheckString } from 'src/decorators';
-import { SubLineCreateDTO } from './subline-create.dto';
 
-export class SubLineDTO extends OmitType(SubLineCreateDTO, [
-  'subtitleId',
-  'subtitleId',
-]) {
-  @ApiProperty({ description: 'Id', type: String })
-  @CheckString()
+export class SubLineDTO {
+  @IsUUID()
   id: string;
 
-  @ApiProperty({ description: 'Subtitle', type: Subtitle })
   subtitle: Subtitle;
 
   // @ApiProperty({ default: '' })
   // @IsString()
   // @IsNotEmpty()
   // supporterId: string;
+
+  @IsDate()
+  timestamp: Date;
+
+  @CheckString()
+  content: string;
 }
