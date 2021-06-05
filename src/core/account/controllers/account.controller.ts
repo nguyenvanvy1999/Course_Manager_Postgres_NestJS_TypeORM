@@ -5,7 +5,7 @@ import { ApiInit, ControllerInit } from 'src/decorators';
 import { AccountDTO, AccountUpdateDTO } from '../dtos';
 import { AccountService } from '../services';
 
-@ControllerInit('accounts')
+@ControllerInit('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
