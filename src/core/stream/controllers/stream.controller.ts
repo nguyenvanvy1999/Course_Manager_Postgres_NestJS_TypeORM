@@ -44,7 +44,6 @@ export class StreamController {
       // Stream the video chunk to the client
       videoStream.pipe(res);
     } catch (error) {
-      AppLogger.error(error.message);
       throw error;
     }
   }
