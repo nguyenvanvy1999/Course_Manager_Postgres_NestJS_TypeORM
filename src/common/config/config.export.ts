@@ -34,6 +34,10 @@ class ConfigService {
     return this.getValue('PORT', true);
   }
 
+  public isDevelopment() {
+    return this.getValue('MODE', false) === 'DEV';
+  }
+
   public isProduction() {
     const mode = this.getValue('MODE', false);
     return mode != 'DEV';
