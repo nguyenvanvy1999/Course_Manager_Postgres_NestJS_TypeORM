@@ -4,7 +4,7 @@ import { CheckString } from 'src/decorators';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { ICommentReaction } from '../interfaces';
 
-@Entity('Comment_reaction')
+@Entity('Comment_reactions')
 export class CommentReaction extends Base implements ICommentReaction {
   @ManyToOne(() => Comment, (comment) => comment.commentReactions, {
     cascade: true,
