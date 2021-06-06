@@ -23,14 +23,14 @@ export class CommentReactionService {
   ) {}
 
   public async create(
-    data: CommentReactionCreateDTO,
+    create: CommentReactionCreateDTO,
   ): Promise<CommentReactionDTO> {
     try {
-      // miss check user
-      const comment = await this.commentService.findOne(data.commentId);
+      //FIXME: miss check user
+      const comment = await this.commentService.findOne(create.commentId);
       if (!comment) throw new NotFoundException('Comment is not exist');
       const commentReaction = await this.commentReactionRepository.save({
-        ...data,
+        ...create,
         comment,
         createdBy: '',
         updatedBy: '',
@@ -84,24 +84,23 @@ export class CommentReactionService {
 
   async update(
     id: string,
-    commentReactionUpdatingDTO: CommentReactionUpdatingDTO,
+    update: CommentReactionUpdatingDTO,
   ): Promise<CommentReactionDTO> {
     try {
       await this.commentReactionRepository.save({
         id,
-        ...commentReactionUpdatingDTO,
+        ...update,
       });
-
       return this.findOne(id);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<boolean> {
     try {
-      await this.commentReactionRepository.delete(id);
-      return { message: 'ok' };
+      const result = await this.commentReactionRepository.delete(id);
+      return result.affected !== null;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
