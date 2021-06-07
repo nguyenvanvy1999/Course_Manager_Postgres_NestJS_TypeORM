@@ -9,11 +9,15 @@ import { configService } from 'src/common/config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          return request?.cookies?.Authentication;
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromExtractors(
+        [
+          (request: Request) => {
+            return request?.cookies?.Authentication;
+          },
+        ],
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ExtractJwt.fromHeader('token'),
+      ),
       ignoreExpiration: false,
       secretOrKey: configService.getJwtConfig().secret,
     });

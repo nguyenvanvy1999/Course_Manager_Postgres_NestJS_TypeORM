@@ -9,7 +9,7 @@ export class AccountCreateDTO {
     uniqueItems: true,
     default: 'Username',
   })
-  @CheckString(true)
+  @CheckString()
   readonly username: string;
 
   @ApiProperty({

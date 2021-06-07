@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AccountModule } from './account/account.module';
+import { AuthModule } from './auth/auth.module';
 import { CommentReactionModule } from './comment-reaction/comment-reaction.module';
 import { CommentModule } from './comment/comment.module';
 import { CourseModule } from './course/course.module';
@@ -18,6 +19,7 @@ import { VideoModule } from './video/video.module';
     SubLineModule,
     CommentModule,
     CommentReactionModule,
+    AuthModule,
   ],
 })
 export class CoreModule {}
