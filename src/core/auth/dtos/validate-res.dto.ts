@@ -1,5 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { CheckString } from 'src/decorators';
+import { RegisterDTO } from './register.dto';
+
+class User extends PickType(RegisterDTO, ['email', 'fullName']) {
+  @ApiProperty({ description: 'Id', type: String })
+  id: string;
+}
 
 export class ValidateResDTO {
   @ApiProperty({
@@ -14,7 +20,7 @@ export class ValidateResDTO {
   @ApiProperty({
     description: 'User',
     required: true,
-    // type: { email: String, id: String, fullName: String },
+    type: User,
   })
   user: {
     email: string;

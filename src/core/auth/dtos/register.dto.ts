@@ -5,7 +5,7 @@ import { CheckString } from 'src/decorators';
 
 export class RegisterDTO extends PartialType(AccountCreateDTO) {
   @ApiProperty({
-    description: 'Email to register',
+    description: 'Email',
     type: String,
     required: true,
     uniqueItems: true,
@@ -16,7 +16,7 @@ export class RegisterDTO extends PartialType(AccountCreateDTO) {
   email: string;
 
   @ApiProperty({
-    description: 'Full name',
+    description: 'Fullname',
     type: String,
     required: true,
     default: '',

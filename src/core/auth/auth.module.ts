@@ -3,7 +3,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from 'src/common/config';
-import { AccountModule } from '../account/account.module';
 import { Account } from '../account/models';
 import { Role } from '../role/models';
 import { User } from '../user/models';
