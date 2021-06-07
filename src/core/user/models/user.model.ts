@@ -3,7 +3,14 @@ import { Account } from 'src/core/account/models';
 import { Base } from 'src/core/base/models';
 import { Role } from 'src/core/role/models';
 import { CheckString } from 'src/decorators';
-import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+} from 'typeorm';
 import { IAdmin, IMod, ISupporter, IUser } from '../interfaces';
 
 @Entity('Users')
@@ -27,6 +34,7 @@ export class User extends Base implements IUser {
   account: Account;
 
   @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable()
   roles: Role[];
 
   @OneToOne('Admin', 'user')

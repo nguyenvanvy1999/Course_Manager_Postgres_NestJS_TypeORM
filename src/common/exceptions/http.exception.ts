@@ -11,6 +11,7 @@ import { ErrorRes } from './dtos';
 @Catch()
 export class HttpExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    AppLogger.error(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -39,7 +40,6 @@ export class HttpExceptionsFilter implements ExceptionFilter {
       path: request.url,
       message,
     };
-    AppLogger.error(res);
     response.status(status).json(res);
   }
 }

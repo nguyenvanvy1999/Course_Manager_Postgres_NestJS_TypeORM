@@ -14,6 +14,7 @@ export class WebsocketsExceptionFilter extends BaseWsExceptionFilter {
     client: TClient,
     exception: Error,
   ) {
+    AppLogger.error(exception);
     if (!(exception instanceof WsException)) {
       return this.handleUnknownError(exception, client);
     }
@@ -23,7 +24,6 @@ export class WebsocketsExceptionFilter extends BaseWsExceptionFilter {
       message: isObject(result) ? result : { message: exception.message },
       time: new Date().toLocaleString(),
     };
-    AppLogger.error(tmp);
     client.emit('exception', tmp);
   }
 }
