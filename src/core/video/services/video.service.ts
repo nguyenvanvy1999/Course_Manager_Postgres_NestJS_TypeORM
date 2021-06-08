@@ -1,6 +1,5 @@
 import {
   Injectable,
-  InternalServerErrorException,
   CACHE_MANAGER,
   Inject,
   NotFoundException,
@@ -48,33 +47,18 @@ export class VideoService extends TypeOrmCrudService<Video> {
       await this.cacheManager.set(`video-${id}`, url, { ttl: 30 * 60 });
       return url;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 
-  public async create(
-    createVideoDto: VideoCreateDTO,
-    file: Express.Multer.File,
-  ): Promise<VideoCreateDTO> {
+  public async create(video: VideoCreateDTO): Promise<VideoCreateDTO> {
     try {
-      const course = await this.courseService.findOne(createVideoDto.courseId);
+      const course = await this.courseService.findOne(video.courseId);
       if (!course) throw new BadRequestException('Course is not exist');
-      const video = await this.videoRepository.save({
-        ...createVideoDto,
+      return await await this.videoRepository.save({
+        ...video,
         course,
-        createdBy: '',
-        updatedBy: '',
       });
-      this.fileUpload
-        .uploadVideo(file)
-        .then(async (result) => {
-          video.videoUrl = result.Location;
-          await this.videoRepository.save(video);
-        })
-        .catch(() => {
-          throw new BadRequestException('Upload video fail');
-        });
-      return video;
     } catch (error) {
       catchError(error);
     }

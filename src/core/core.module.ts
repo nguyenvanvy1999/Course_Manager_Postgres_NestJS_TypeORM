@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommentReactionModule } from './comment-reaction/comment-reaction.module';
 import { CommentModule } from './comment/comment.module';
 import { CourseModule } from './course/course.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { RoleModule } from './role/role.module';
 import { StreamModule } from './stream/stream.module';
 import { SubLineModule } from './subline/subline.module';
@@ -24,6 +25,7 @@ import { VideoModule } from './video/video.module';
     CommentModule,
     CommentReactionModule,
     AuthModule,
+    FileUploadModule,
   ],
 })
 export class CoreModule {}
