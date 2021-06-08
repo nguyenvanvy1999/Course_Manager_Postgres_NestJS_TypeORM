@@ -1,21 +1,12 @@
 import {
   Post,
-  Get,
-  Patch,
-  Delete,
-  Param,
   Body,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
 } from '@nestjs/common';
-import {
-  ApiCreatedResponse,
-  ApiOperation,
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
 import { ApiInit, ControllerInit } from 'src/decorators';
-import { VideoCreateDTO, VideoDTO, VideoUpdateDTO } from '../dtos';
+import { VideoCreateDTO, VideoUpdateDTO } from '../dtos';
 import { VideoService } from '../services';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { Video } from '../models';
