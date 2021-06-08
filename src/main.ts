@@ -10,6 +10,8 @@ import path from 'path';
 import favicon from 'serve-favicon';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { configService } from './common/config';
+import { ResponseAddAccessTokenToHeaderInterceptor } from './common/intercreptors';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: AppLogger });
@@ -27,7 +29,12 @@ function initMiddleware(app: INestApplication) {
       stream: stream,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+  app.use(cookieParser());
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -56,6 +63,7 @@ function initSwagger(app: INestApplication) {
 function initGlobal(app: INestApplication) {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionsFilter());
+  app.useGlobalInterceptors(new ResponseAddAccessTokenToHeaderInterceptor());
 }
 
 function log() {
