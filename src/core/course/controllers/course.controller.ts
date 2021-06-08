@@ -22,7 +22,7 @@ export class CourseController {
   @ApiInit('Get course by id', CourseDTO)
   public async findOne(@Param('id') id: string): Promise<CourseDTO> {
     try {
-      return await this.courseService.findById(id);
+      return await this.courseService.findOne(id);
     } catch (error) {
       throw error;
     }

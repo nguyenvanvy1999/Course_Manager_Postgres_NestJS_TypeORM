@@ -3,5 +3,6 @@ FIXME: subline service
 FIXME: throw error in service files
 FIXME: comment service
 FIXME: comment reaction service
+FIXME: video service: add swagger decorator to upload file
 
 TODO: add pagination to services

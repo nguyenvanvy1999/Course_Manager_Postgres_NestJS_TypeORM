@@ -1,12 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
-export const ApiInit = (
-  description: string,
-  type?: any,
-  resDescription?: string,
-) =>
+export const ApiInit = (summary: string, type?: any, resDescription?: string) =>
   applyDecorators(
-    ApiOperation({ description }),
+    ApiOperation({ summary }),
     ApiOkResponse({ description: resDescription || 'OK', type }),
   );
