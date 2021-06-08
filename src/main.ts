@@ -10,7 +10,7 @@ import path from 'path';
 import favicon from 'serve-favicon';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { configService } from './common/config';
-import { ResponseAddAccessTokenToHeaderInterceptor } from './common/intercreptors';
+import { ResponseAddAccessTokenToHeaderInterceptor } from './common/interceptors';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {

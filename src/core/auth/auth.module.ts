@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +8,7 @@ import { Account } from '../account/models';
 import { Role } from '../role/models';
 import { User } from '../user/models';
 import { AuthController } from './controllers';
+import { RolesGuard } from './guards';
 import { AuthService } from './services';
 import { JwtStrategy, LocalStrategy } from './strategies';
 
@@ -16,7 +18,12 @@ import { JwtStrategy, LocalStrategy } from './strategies';
     PassportModule,
     JwtModule.register(configService.getJwtConfig()),
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
   controllers: [AuthController],
   exports: [AuthService, JwtModule],
 })
