@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
 import { Course } from 'src/core/course/models';
 import { CheckString } from 'src/decorators';
 
@@ -40,11 +39,9 @@ export class VideoCreateDTO {
   @CheckString()
   readonly videoUrl?: string;
 
-  @ApiProperty({
-    description: 'Course of video',
-    required: false,
-    default: new Course(),
-  })
-  @IsNotEmpty()
+  @ApiProperty({ description: 'Course id', type: String, required: false })
+  @CheckString(false)
+  readonly courseId?: string;
+
   readonly course?: Course;
 }

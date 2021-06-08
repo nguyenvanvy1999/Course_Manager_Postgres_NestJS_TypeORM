@@ -4,63 +4,33 @@ import {
   CACHE_MANAGER,
   Inject,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VideoCreateDTO, VideoDTO, VideoUpdateDTO } from '../dtos';
+import { VideoCreateDTO } from '../dtos';
 import { Video } from '../models';
 import fs from 'fs';
 import { Cache } from 'cache-manager';
 import { AppLogger } from 'src/common/logger';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { FileUpload } from 'src/core/file-upload/interfaces';
+import { FileUploadByS3 } from 'src/core/file-upload/strategies';
+import { catchError } from 'src/common/exceptions';
+import { CourseService } from 'src/core/course/services';
 
 @Injectable()
-export class VideoService {
+export class VideoService extends TypeOrmCrudService<Video> {
+  private fileUpload: FileUpload;
   constructor(
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
-  ) {}
-
-  public async create(video: VideoCreateDTO): Promise<VideoDTO> {
-    try {
-      return await this.videoRepository.save(video);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  public async findAll(): Promise<VideoDTO[]> {
-    try {
-      return await this.videoRepository.find();
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  public async findById(id: string): Promise<VideoDTO> {
-    try {
-      return await this.videoRepository.findOne({ id });
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  public async update(id: string, update: VideoUpdateDTO): Promise<VideoDTO> {
-    try {
-      return await this.videoRepository.save({ id, ...update });
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
-  public async delete(id: string): Promise<boolean> {
-    try {
-      const result = await this.videoRepository.delete({ id });
-      return result.affected !== null;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    private readonly courseService: CourseService,
+  ) {
+    super(videoRepository);
+    this.fileUpload = new FileUploadByS3();
   }
 
   public async getVideoPathById(id: string): Promise<string> {
@@ -81,6 +51,34 @@ export class VideoService {
       throw new InternalServerErrorException(error);
     }
   }
+
+  public async create(
+    createVideoDto: VideoCreateDTO,
+    file: Express.Multer.File,
+  ): Promise<VideoCreateDTO> {
+    try {
+      const course = await this.courseService.findOne(createVideoDto.courseId);
+      if (!course) throw new BadRequestException('Course is not exist');
+      const video = await this.videoRepository.save({
+        ...createVideoDto,
+        course,
+        createdBy: '',
+        updatedBy: '',
+      });
+      this.fileUpload
+        .uploadVideo(file)
+        .then(async (result) => {
+          video.videoUrl = result.Location;
+          await this.videoRepository.save(video);
+        })
+        .catch(() => {
+          throw new BadRequestException('Upload video fail');
+        });
+      return video;
+    } catch (error) {
+      catchError(error);
+    }
+  }
   public getVideoSizeByPath(path: string): number | undefined {
     try {
       return fs.statSync(path).size;
@@ -94,7 +92,7 @@ export class VideoService {
     try {
       return fs.createReadStream(path, { start, end });
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 }
