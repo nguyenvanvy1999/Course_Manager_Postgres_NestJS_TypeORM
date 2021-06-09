@@ -1,6 +1,6 @@
 import { Body, Delete, Get, Param, Patch } from '@nestjs/common';
 import { ApiNotFoundResponse } from '@nestjs/swagger';
-import { ErrorRes } from 'src/common/exceptions';
+import { catchError, ErrorRes } from 'src/common/exceptions';
 import { ApiInit, ControllerInit } from 'src/decorators';
 import { AccountDTO, AccountUpdateDTO } from '../dtos';
 import { AccountService } from '../services';
@@ -15,7 +15,7 @@ export class AccountController {
     try {
       return await this.accountService.findAll();
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 
@@ -26,7 +26,7 @@ export class AccountController {
     try {
       return await this.accountService.findById(id);
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 
@@ -39,7 +39,7 @@ export class AccountController {
     try {
       return await this.accountService.update(id, update);
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 
@@ -49,7 +49,7 @@ export class AccountController {
     try {
       return await this.accountService.delete(id);
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 }

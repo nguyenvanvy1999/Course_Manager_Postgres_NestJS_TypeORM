@@ -6,6 +6,7 @@ import { User } from '../decorators';
 import { RegisterDTO, ValidateResDTO } from '../dtos';
 import { JwtAuthGuard, LocalAuthGuard } from '../guards';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { catchError } from 'src/common/exceptions';
 
 @ControllerInit('auth')
 export class AuthController {
@@ -23,7 +24,7 @@ export class AuthController {
       res.setHeader('Set-Cookie', cookie);
       return parsedUser;
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
   @Get('profile')
@@ -34,7 +35,7 @@ export class AuthController {
     try {
       return user;
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
   @Post('register')
@@ -43,8 +44,12 @@ export class AuthController {
     @Body() registerPayload: RegisterDTO,
     @Res() res: Response,
   ): Promise<ValidateResDTO> {
-    const { cookie, user } = await this.authService.register(registerPayload);
-    res.setHeader('Set-Cookie', cookie);
-    return user;
+    try {
+      const { cookie, user } = await this.authService.register(registerPayload);
+      res.setHeader('Set-Cookie', cookie);
+      return user;
+    } catch (error) {
+      catchError(error);
+    }
   }
 }

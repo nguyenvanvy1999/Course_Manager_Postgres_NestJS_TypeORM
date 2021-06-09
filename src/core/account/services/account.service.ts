@@ -1,9 +1,6 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { catchError } from 'src/common/exceptions';
 import { Repository } from 'typeorm';
 import { AccountDTO, AccountUpdateDTO } from '../dtos';
 import { Account } from '../models';
@@ -20,7 +17,7 @@ export class AccountService {
     try {
       return this.accountRepository.findOne({ where: { username } });
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 
@@ -29,7 +26,7 @@ export class AccountService {
       const accounts = await this.accountRepository.find();
       return accounts.map(mapAccountToAccountDTO);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 
@@ -40,7 +37,7 @@ export class AccountService {
         throw new NotFoundException(`Account with id ${id} is not found`);
       return mapAccountToAccountDTO(account);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 
@@ -52,7 +49,7 @@ export class AccountService {
       const account = await this.accountRepository.save({ id, ...update });
       return mapAccountToAccountDTO(account);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 
@@ -61,7 +58,7 @@ export class AccountService {
       const result = await this.accountRepository.delete({ id });
       return result.affected !== null;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      catchError(error);
     }
   }
 }
