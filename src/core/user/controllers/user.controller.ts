@@ -10,6 +10,7 @@ import {
 import { User } from '../models';
 import { UserService } from '../services';
 import { AppLogger } from 'src/common/logger';
+import { catchError } from 'src/common/exceptions';
 
 @ControllerInit('user')
 @Crud({
@@ -26,26 +27,30 @@ export class UserController implements CrudController<User> {
   async getMany(
     @ParsedRequest() req: CrudRequest,
   ): Promise<GetManyDefaultResponse<User> | User[]> {
-    req.options.query.join = {
-      account: {
-        allow: ['username'],
-        eager: true,
-      },
-      roles: {
-        allow: ['name'],
-        eager: true,
-      },
-    };
-    const baseRes = await this.base.getManyBase(req);
-    baseRes['data'] = baseRes['data'].map((item) => {
-      const { account, roles, ...rest } = item;
-      return {
-        ...rest,
-        username: account.username,
-        roles: roles.map((role) => role['name']).join(','),
+    try {
+      req.options.query.join = {
+        account: {
+          allow: ['username'],
+          eager: true,
+        },
+        roles: {
+          allow: ['name'],
+          eager: true,
+        },
       };
-    });
-    AppLogger.log(baseRes['data']);
-    return baseRes;
+      const baseRes = await this.base.getManyBase(req);
+      baseRes['data'] = baseRes['data'].map((item) => {
+        const { account, roles, ...rest } = item;
+        return {
+          ...rest,
+          username: account.username,
+          roles: roles.map((role) => role['name']).join(','),
+        };
+      });
+      AppLogger.log(baseRes['data']);
+      return baseRes;
+    } catch (error) {
+      catchError(error);
+    }
   }
 }

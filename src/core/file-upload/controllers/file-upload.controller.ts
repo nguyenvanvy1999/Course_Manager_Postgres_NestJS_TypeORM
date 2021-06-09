@@ -1,7 +1,11 @@
 import {
   BadRequestException,
   Body,
+  Get,
+  InternalServerErrorException,
+  Param,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -11,6 +15,7 @@ import { ApiInit, ControllerInit } from 'src/decorators';
 import { FileUploadDTO } from '../dtos';
 import { FileUpload } from '../interfaces';
 import { FileUploadByS3 } from '../strategies';
+import { Response } from 'express';
 
 @ControllerInit('file-upload')
 export class FileUploadController {
@@ -32,6 +37,26 @@ export class FileUploadController {
         throw new BadRequestException('Type is required');
       const data = await this.fileUpload.uploadFile(file, fileUploadDTO.type);
       return { data };
+    } catch (error) {
+      catchError(error);
+    }
+  }
+
+  @Get('download')
+  @ApiInit('Download file from S3')
+  public download(@Param('url') url: string, @Res() res: Response) {
+    try {
+      const stream = this.fileUpload.downloadVideo(url);
+      stream.on('error', (err) => {
+        throw new InternalServerErrorException(err);
+      });
+      res.set('Content-Length', stream.ContentLength);
+      res.set('Last-Modified', stream.LastModified);
+      res.set('ETag', stream.ETag);
+      stream.on('end', () => {
+        console.log('Served by Amazon S3: ');
+      });
+      stream.pipe(res);
     } catch (error) {
       catchError(error);
     }

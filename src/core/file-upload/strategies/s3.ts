@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { catchError } from 'src/common/exceptions';
 import { FileUpload, FileUploadType } from '../interfaces';
+import { Readable } from 'stream';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -9,11 +10,18 @@ const s3 = new AWS.S3({
 });
 
 export class FileUploadByS3 implements FileUpload {
-  public downloadVideo(url: string) {
-    throw new Error('Method not implemented.');
+  public downloadVideo(url: string): Readable {
+    try {
+      const urlKey = `${process.env.AWS_S3_FOLDER}/${url}`;
+      const options = { Bucket: process.env.AWS_S3_BUCKET_NAME, Key: urlKey };
+      return s3.getObject(options).createReadStream();
+    } catch (error) {
+      catchError(error);
+    }
   }
 
   public getVideoByRange(startTime: string, endTime: any) {
+    console.log(startTime, endTime);
     throw new Error('Method not implemented.');
   }
 

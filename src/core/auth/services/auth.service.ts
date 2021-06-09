@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { configService } from 'src/common/config';
+import { catchError } from 'src/common/exceptions';
 import { AppLogger } from 'src/common/logger';
 import { Account } from 'src/core/account/models';
 import { Role } from 'src/core/role/models';
@@ -68,7 +69,7 @@ export class AuthService {
       const cookie = this.getCookieWithJwtToken(username, id);
       return { cookie, user: account };
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 
@@ -115,8 +116,7 @@ export class AuthService {
         });
       });
     } catch (error) {
-      AppLogger.error(`${error.message}`);
-      throw new BadRequestException(error);
+      catchError(error);
     }
   }
   private getCookieWithJwtToken(username: string, userId: string): string {
@@ -128,7 +128,7 @@ export class AuthService {
       } = configService.getJwtConfig();
       return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn};SameSite=None; Secure`;
     } catch (error) {
-      throw error;
+      catchError(error);
     }
   }
 }
